@@ -19,6 +19,7 @@ import org.springframework.cloud.netflix.ribbon.RibbonClient;
  * name: 针对 服务Id为MICROSERVICECLOUD-DEPT 的微服务使用自定义的负载均衡策略
  * configuration: 自定义的负载均衡算法的配置类
  */
+@RibbonClient(name = "MICROSERVICECLOUD-DEPT",configuration = {MySelfRule.class})
 public class DeptConsumer80_App {
     public static void main(String[] args) {
         SpringApplication.run(DeptConsumer80_App.class,args);
