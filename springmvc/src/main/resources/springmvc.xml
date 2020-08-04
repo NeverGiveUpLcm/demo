@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+    <!--包扫描-->
+    <context:component-scan base-package="com.itcast.springmvc.controller"></context:component-scan>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+        <!--指定生成的view对象为JstlView-->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+    </bean>
+    <!--id必须为"messageSource",否则不生效-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <!--basename: 指定配置文件基础名-->
+        <property name="basename" value="i18n"></property>
+    </bean>
+
+    <!--发送一个请求("toLoginPage"): 直接来到web-inf下的login页面;mvc名称空间下有一个请求映射标签-->
+    <!--path:指定哪个请求
+        view-name: 指定映射给哪个视图
+        走了springmvc的整个流程,可以提供国际化功能
+        但是其他的访问请求就不好使用了,会出现404
+    -->
+    <mvc:view-controller path="/toLoginPage" view-name="login"/>
+    <!--开启mvc注解驱动模式  -->
+    <mvc:annotation-driven/>
+
+    <bean id="myViewResolver" class="com.itcast.springmvc.utils.MyViewResolver">
+        <!--数字越小,优先级越高
+            默认的InternalResourceViewResolver是优先级最低的
+        -->
+        <property name="order" value="1"></property>
+    </bean>
+    <bean id="myView" class="com.itcast.springmvc.utils.MyView"></bean>
+
+    <!--默认前端控制器是拦截所有资源(除过jsp),所以js等其它静态资源就404了;我们是要将js文件的请求交给tomcat来处理的-->
+    <!--告诉springmvc,自己能够映射的请求就自己来处理,不能处理的请求就交给tomcat来处理-->
+    <!--只配置这一个的话,静态资源能够访问,动态映射的请求就不行了-->
+    <mvc:default-servlet-handler/>
+    <!--springmvc可以保证动态请求和静态资源都能访问-->
+
+
+
+
+
+    <!--conversion-service: 告诉springmvc使用我们自己配置的类型转换组件-->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+    <!--告诉springmvc别用默认的ConversionService;
+        而用我自定义的ConversionService、可能有我们自定义的Converter
+    -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <!--converters转换起中添加我们自定义的类型转换器-->
+        <property name="converters">
+            <set>
+                <bean class="com.itcast.springmvc.utils.MyConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
+</beans>

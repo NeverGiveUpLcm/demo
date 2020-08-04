@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itcast.springcloud.dao.DeptDao">
+    <resultMap id="baseMap" type="com.itcast.springcloud.entity.Dept">
+        <id property="deptno" column="dept_no"></id>
+        <result property="dname" column="dept_name"></result>
+        <result property="db_source" column="db_source"></result>
+    </resultMap>
+    <select id="findAll" resultMap="baseMap">
+        select * from tab_dept 
+    </select>
+
+    <insert id="addDept">
+        insert into tab_dept(dept_no,dept_name,db_source) values (#{deptno,jdbcType=BIGINT},#{dname,jdbcType=VARCHAR},#{db_source,jdbcType=VARCHAR})
+    </insert>
+    
+    <delete id="findById">
+        delete from tab_dept where dept_no = #{id}
+    </delete>
+
+</mapper>

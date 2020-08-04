@@ -1,0 +1,13 @@
+#配置eureka的服务端
+server:
+  port: 7001
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+    #是否注册进eureka 作为服务中心,就不需要注册进服务中心了
+    register-with-eureka: false
+    fetch-registry: false

@@ -1,0 +1,51 @@
+server:
+  port: 8002
+mybatis:
+  #mybatis配置文件所在路径
+  config-location: classpath:mybatis/mybatis.cfg.xml
+  #所有Entity别名类所在包
+  type-aliases-package: com.itcast.springcloud.entity
+  #mapper映射文件所在位置
+  mapper-locations:
+  - classpath:mybatis/mapper/**/*.xml
+spring:
+  application:
+    name: microservicecloud-dept
+  #当前数据源操作类型
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #mysql驱动包
+    driver-class-name: com.mysql.jdbc.Driver
+    #数据库名称
+    url: jdbc:mysql://localhost:3306/mybatis_test
+    username: root
+    password: root
+    dbcp2:
+      #数据库连接池的最小维持连接数
+      min-idle: 5
+      #初始化连接数
+      initial-size: 5
+      #最大连接数
+      max-total: 5
+      #等待连接获取的最大超时时间
+      max-wait-millis: 200
+
+eureka:
+  #将客户端注册进eureka服务列表内
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+  instance:
+    instance-id: microservicecloud-dept8002
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+
+info:
+  app.name: itcast-microservicecloud
+  company.name: www.itcast.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+
+
+
