@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:名称空间;写接口的全类名;相当于告诉mybatis这个配置文件是实现哪个接口的-->
+<mapper namespace="com.itcast.demo.day09.dao.EmployeeMapper">
+   <resultMap id="BaseMap" type="com.itcast.demo.day09.entity.Employee">
+       <id property="id" column="id"></id>
+       <result property="name" column="name"></result>
+       <result property="gender" column="gender"></result>
+       <result property="email" column="email"></result>
+       <association property="email" javaType="java.lang.String"></association>
+   </resultMap>
+
+    <select id="selectById" resultMap="BaseMap">
+        select * from t_employee where id = #{id}
+    </select>
+
+    <delete id="deleteEmp">
+        delete from t_employee
+        where id = #{id}
+    </delete>
+
+    <update id="updateEmp">
+        update t_employee set
+        name = #{name},
+        gender = #{gender},
+        email = #{email}
+    </update>
+
+    <insert id="insert">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+        select max(id) from t_employee
+    </selectKey>
+        insert t_employee(name,gender,email)
+        values (#{name},#{gender},#{email})
+    </insert>
+
+    <select id="selectAll" resultType="com.itcast.demo.day09.entity.Employee">
+        select * from t_employee
+    </select>
+    <select id="selectReturnMap" resultType="java.util.Map">
+        select * from t_employee
+        where id = #{id}
+    </select>
+    <select id="selectListReturnMap" resultType="com.itcast.demo.day09.entity.Employee">
+        select * from t_employee
+    </select>
+
+
+</mapper>

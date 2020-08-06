@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itcast.demo.day09.dao.KeyMapper">
+    <!--查询key的时候也可以带上锁子信息-->
+    <select id="selectByIdSimple" resultType="com.itcast.demo.day09.entity.Key">
+        select * from t_key where id = #{id}
+    </select>
+
+    <resultMap id="mykey" type="com.itcast.demo.day09.entity.Key">
+        <id property="id" column="id"></id>
+        <result property="keyName" column="keyName"></result>
+        <!--告诉mybatis自己去调用一个查询查锁子-->
+        <!--select: 指定一个查询sql的唯一标识;mybatis自动调用指定的sql将查询出的lock封装进来-->
+        <!--方法的调用需要传入参数;告诉mybatis把哪一列的值传递过去-->
+        <!--column:指定将哪一列的数据传递过去-->
+        <!--fetchType会覆盖掉setting中配置的懒加载策略;当fetchType=eager的时候,会立即加载-->
+        <association property="lock"
+                     select="com.itcast.demo.day09.dao.LockMapper.getLockByIdSimple"
+                     column="lockid" fetchType="eager"></association>
+    </resultMap>
+
+    <select id="getKeysByLockId" resultType="com.itcast.demo.day09.entity.Key">
+        select * from t_key where lockid = #{id}
+    </select>
+
+
+
+
+    <resultMap id="resultMap" type="com.itcast.demo.day09.entity.Key">
+        <id property="id" column="kid"></id>
+        <result property="keyName" column="keyName"></result>
+        <association property="lock" javaType="com.itcast.demo.day09.entity.Lock">
+            <id property="id" column="lid"></id>
+            <result property="lockName" column="lockName"></result>
+        </association>
+    </resultMap>
+
+
+    <select id="selectById" resultMap="resultMap">
+        select
+         k.id as kid,
+         k.keyName as keyName,
+         l.id as lid,
+         l.lockName as lockName
+         from tbl_key k left join tbl_lock l on k.id = l.key_id
+        where k.id = #{id}
+    </select>
+
+
+</mapper>
