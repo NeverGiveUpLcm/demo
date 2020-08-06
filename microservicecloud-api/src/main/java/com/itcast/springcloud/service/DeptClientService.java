@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/7/1
  * fallbackFactory属性:降级处理的类
  */
-@FeignClient(value = "MICROSERVICECLOUD-DEPT",fallbackFactory = DeptClientServiceFallBackFactory.class)
+@FeignClient(value = "MICROSERVICECLOUD-DEPT",fallback = DeptClientServiceFallBack.class)
 public interface DeptClientService {
 
     @PostMapping("/dept/add")

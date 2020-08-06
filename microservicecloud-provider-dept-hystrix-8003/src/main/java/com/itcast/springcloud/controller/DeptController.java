@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,8 +51,13 @@ public class DeptController {
         return dept;
     }
     @GetMapping("/list")
+    @HystrixCommand(fallbackMethod = "listError")
     public List<Dept> list(){
         return deptService.list();
+    }
+
+    public List<Dept> listError(){
+        return new LinkedList<Dept>();
     }
 
     public boolean add(@RequestBody Dept dept){
